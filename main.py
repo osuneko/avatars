@@ -1,17 +1,18 @@
-import os, random
+from os import path
+from random import randint as randomNumber
 from quart import Quart, send_file
 
-app, defaultAvatars = Quart(__name__), ["-1", "-2", "-3", "-4", "-5", "-6", "-7", "-8"]
+app = Quart(__name__)
 
 @app.route("/")
 async def homepage():
-	return await send_file("avatars/{}.png".format(random.choice(defaultAvatars)))
+	return await send_file(f"avatars/-{randomNumber(1, 7)}.png")
 
 @app.route("/<int:uid>")
 async def avatarRequest(uid):
-	if os.path.exists(f"avatars/{uid}.png"):
+	if path.exists(f"avatars/{uid}.png"):
 		return await send_file(f"avatars/{uid}.png")
 
-	return await send_file("avatars/{}.png".format(random.choice(defaultAvatars)))
+	return await send_file(f"avatars/-{randomNumber(1, 7)}.png")
 
-app.run()
+app.run(host="localhost", port=5727)
